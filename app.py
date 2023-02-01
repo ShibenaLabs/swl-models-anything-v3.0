@@ -4,7 +4,7 @@ import torch
 import base64
 from io import BytesIO
 from torch import autocast
-from diffusers import StableDiffusionPipeline, EulerAncestralDiscreteScheduler
+from diffusers import StableDiffusionPipeline
 
 # Init is ran on server startup
 # Load your model to GPU as a global variable here using the variable name "model"
@@ -12,13 +12,12 @@ def init():
     global model
 
     t1 = time.time()
-    model_id = "prompthero/openjourney-v2"
-    model = StableDiffusionPipeline.from_pretrained(
-        model_id
-    ).to("cuda")
+    model_id = "swl-models/anything-v3.0"
+    model = StableDiffusionPipeline.from_pretrained(model_id, revision=branch_name, torch_dtype=torch.float16).to("cuda")
     t2 = time.time()
     print("Init took - ",t2-t1,"seconds")
-
+    
+branch_name= "diffusers"
 # Inference is ran for every server call
 # Reference your preloaded global model variable here.
 def inference(model_inputs:dict) -> dict:
@@ -45,3 +44,4 @@ def inference(model_inputs:dict) -> dict:
 
     # Return the results as a dictionary
     return {'image_base64': image_base64}
+
