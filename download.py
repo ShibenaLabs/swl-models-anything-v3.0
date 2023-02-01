@@ -3,14 +3,15 @@
 import os
 import time
 import torch
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline, EulerAncestralDiscreteScheduler
 
 def download_model():
     # do a dry run of loading the huggingface model, which will download weights at build time
     t1 = time.time()
     model_id = "swl-models/anything-v3.0"
-    model = StableDiffusionPipeline.from_pretrained(model_id, revision=branch_name, torch_dtype=torch.float16)
-    
+ model = StableDiffusionPipeline.from_pretrained(
+        model_id
+    )
     t2 = time.time()
     print("Download took - ",t2-t1,"seconds")
 
